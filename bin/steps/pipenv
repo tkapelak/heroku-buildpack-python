@@ -6,7 +6,7 @@
 source "$BIN_DIR/utils"
 set -e
 PYTHON_APP_DIR="$(cat "$ENV_DIR/PYTHON_APP_DIR")"
-PIP_NO_BINARY=psycopg2
+export PIP_NO_BINARY=psycopg2
 
 if [[ -f $PYTHON_APP_DIR/Pipfile.lock ]]; then
     if [[ -f .heroku/python/Pipfile.lock.sha256 ]]; then
@@ -53,6 +53,7 @@ if [ ! "$SKIP_PIPENV_INSTALL" ]; then
             puts-step "1Installing dependencies with Pipenv $PIPENV_VERSION…"
             cd $PYTHON_APP_DIR
             /app/.heroku/python/bin/pipenv install --system --skip-lock 2>&1 | indent
+            /app/.heroku/python/bin/pipenv install psycopg2
             cd -
         else
             pipenv-to-pip $PYTHON_APP_DIR/Pipfile.lock > requirements.txt
